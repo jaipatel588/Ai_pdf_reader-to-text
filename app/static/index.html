@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Theme Identifier Chatbot</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 1rem; }
+  h2 { margin-top: 2rem; }
+  input, button, select { padding: 0.5rem; margin: 0.5rem 0; width: 100%; max-width: 400px; }
+  .response { background: #eee; padding: 1rem; margin-top: 1rem; border-radius: 5px; white-space: pre-wrap; }
+  .documents-list { margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<h1>Theme Identifier Chatbot</h1>
+
+<section id="upload-section">
+  <h2>Upload Document (PDF/TXT)</h2>
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">Upload</button>
+  <div id="uploadResult" class="response"></div>
+</section>
+
+<section id="query-section">
+  <h2>Query Theme</h2>
+  <input type="text" id="queryInput" placeholder="Enter your query" />
+  <button onclick="sendQuery()">Send Query</button>
+  <div id="queryResult" class="response"></div>
+</section>
+
+<section id="documents-section">
+  <h2>Uploaded Documents</h2>
+  <button onclick="loadDocuments()">Load Documents</button>
+  <ul id="documentsList" class="documents-list"></ul>
+</section>
+
+<script>
+  async function uploadFile() {
+    const input = document.getElementById("fileInput");
+    if (input.files.length === 0) {
+      alert("Please select a file to upload");
+      return;
+    }
+    const file = input.files[0];
+    const allowedTypes = ["application/pdf", "text/plain"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only PDF or TXT files are allowed.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/upload/", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+    document.getElementById("uploadResult").textContent = result.message || JSON.stringify(result);
+    input.value = "";
+  }
+
+  async function sendQuery() {
+    const query = document.getElementById("queryInput").value.trim();
+    if (!query) {
+      alert("Please enter a query");
+      return;
+    }
+
+    const response = await fetch(`/query/?q=${encodeURIComponent(query)}`);
+    const result = await response.json();
+    document.getElementById("queryResult").textContent = result.response || JSON.stringify(result);
+  }
+
+  async function loadDocuments() {
+    const response = await fetch("/documents/");
+    const data = await response.json();
+    const list = document.getElementById("documentsList");
+    list.innerHTML = "";
+    if (data.documents && data.documents.length > 0) {
+      data.documents.forEach(doc => {
+        const li = document.createElement("li");
+        li.textContent = doc;
+        list.appendChild(li);
+      });
+    } else {
+      list.textContent = "No documents found.";
+    }
+  }
+</script>
+
+</body>
+</html>
