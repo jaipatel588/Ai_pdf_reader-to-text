@@ -11,7 +11,7 @@
 ## How to Run
 1. Clone repo
 2. Install requirements
-3. Run: `uvicorn backend.app.main:app --reload`
+3. Run: `uvicorn venv app.main:app --reload`
 
 ## Sample Query
 > "What penalties were imposed?"
