@@ -1,0 +1,42 @@
+# Core FastAPI stack
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+tqdm
+
+# OCR & Document Processing
+pillow
+pytesseract
+pdfplumber
+
+# Vector Embedding & LLM
+langchain
+openai
+faiss-cpu
+
+# Configuration
+python-dotenv
+
+# Flask and useful extensions
+flask
+flask-cors
+flask-restful
+flask-login
+flask-wtf
+flask-sqlalchemy
+flask-migrate
+
+# Optional Extras for async, background tasks, etc.
+aiofiles
+httpx
+jinja2
+
+# Testing
+pytest
+requests
+
+# Linting/Formatting (Optional)
+black
+isort
+flake8
